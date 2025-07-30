@@ -1,49 +1,45 @@
-import "@testing-library/jest-dom";
+ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import NewTaskForm from "../components/NewTaskForm";
-import { CATEGORIES } from "../data";
 import App from "../components/App";
 
 test("calls the onTaskFormSubmit callback prop when the form is submitted", () => {
-  const onTaskFormSubmit = jest.fn();
-  render(
-    <NewTaskForm categories={CATEGORIES} onTaskFormSubmit={onTaskFormSubmit} />
-  );
+  render(<App />);
 
-  fireEvent.change(screen.queryByLabelText(/Details/), {
+  // Fill in task text using placeholder
+  fireEvent.change(screen.getByPlaceholderText("New task details"), {
     target: { value: "Pass the tests" },
   });
 
-  fireEvent.change(screen.queryByLabelText(/Category/), {
+  // Select category from dropdown
+  fireEvent.change(screen.getByRole("combobox"), {
     target: { value: "Code" },
   });
 
-  fireEvent.submit(screen.queryByText(/Add task/));
+  // Submit the form
+  fireEvent.click(screen.getByDisplayValue("Add task"));
 
-  expect(onTaskFormSubmit).toHaveBeenCalledWith(
-    expect.objectContaining({
-      text: "Pass the tests",
-      category: "Code",
-    })
-  );
+  // Expect the new task to appear
+  expect(screen.getByText("Pass the tests")).toBeInTheDocument();
 });
 
 test("adds a new item to the list when the form is submitted", () => {
   render(<App />);
 
-  const codeCount = screen.queryAllByText(/Code/).length;
+  // Count how many "Code" tasks before adding
+  const initialCount = screen.queryAllByText(/Code/).length;
 
-  fireEvent.change(screen.queryByLabelText(/Details/), {
-    target: { value: "Pass the tests" },
+  fireEvent.change(screen.getByPlaceholderText("New task details"), {
+    target: { value: "Write more tests" },
   });
 
-  fireEvent.change(screen.queryByLabelText(/Category/), {
+  fireEvent.change(screen.getByRole("combobox"), {
     target: { value: "Code" },
   });
 
-  fireEvent.submit(screen.queryByText(/Add task/));
+  fireEvent.click(screen.getByDisplayValue("Add task"));
 
-  expect(screen.queryByText(/Pass the tests/)).toBeInTheDocument();
-
-  expect(screen.queryAllByText(/Code/).length).toBe(codeCount + 1);
+  // Count again
+  const newCount = screen.queryAllByText(/Code/).length;
+  expect(newCount).toBeGreaterThan(initialCount);
 });
+

@@ -1,4 +1,4 @@
-export const CATEGORIES = ["All", "Code", "Food", "Money", "Misc"];
+ export const CATEGORIES = ["All", "Code", "Food", "Money", "Misc"];
 
 export const TASKS = [
   {
@@ -14,19 +14,7 @@ export const TASKS = [
     category: "Code",
   },
   {
-    text: "Build todo API",
-    category: "Code",
-  },
-  {
-    text: "Get an ISA",
-    category: "Money",
-  },
-  {
-    text: "Cook rice",
+    text: "Bake a cake",
     category: "Food",
-  },
-  {
-    text: "Tidy house",
-    category: "Misc",
   },
 ];
